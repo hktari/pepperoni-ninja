@@ -142,6 +142,7 @@ namespace UnityStandardAssets._2D
             else if (jump && m_WallJump)
             {
                 var dir = m_WallJumpDir * m_WallJumpForce;
+                m_Rigidbody2D.velocity = Vector2.zero;
                 m_Rigidbody2D.AddForce(dir);
 
                 Flip();
