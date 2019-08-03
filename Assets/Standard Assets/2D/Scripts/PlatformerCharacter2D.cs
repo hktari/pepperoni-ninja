@@ -13,6 +13,9 @@ namespace UnityStandardAssets._2D
         [SerializeField] private LayerMask m_WhatIsGround;                  // A mask determining what is ground to the character
         [SerializeField] private LayerMask m_WhatIsWall;                  // A mask determining what is ground to the character
         public float k_WallCheckRadius = 2f;
+        public float m_WallJumpForce = 300;
+        public Vector2 m_WallJumpDirToLeft = Vector2.left + Vector2.up;
+        public Vector2 m_WallJumpDirToRight = Vector2.right + Vector2.up;
 
         private Transform m_GroundCheck;    // A position marking where to check if the player is grounded.
         const float k_GroundedRadius = .2f; // Radius of the overlap circle to determine if grounded
@@ -28,7 +31,6 @@ namespace UnityStandardAssets._2D
 
         private bool m_WallJump = false;
         private Vector2 m_WallJumpDir;
-        public float m_WallJumpForce = 300;
         
         private void Awake()
         {
@@ -45,32 +47,14 @@ namespace UnityStandardAssets._2D
 
         private void FixedUpdate()
         {
+            HandleWallJump();
+
+
             m_Grounded = false;
 
             // The player is grounded if a circlecast to the groundcheck position hits anything designated as ground
             // This can be done using layers instead but Sample Assets will not overwrite your project settings.
             Collider2D[] colliders = Physics2D.OverlapCircleAll(m_GroundCheck.position, k_GroundedRadius, m_WhatIsGround);
-
-            var wallCheckPosLeft = m_FacingRight ? m_WallCheckLeft : m_WallCheckRight;
-            var wallCheckPosRight = m_FacingRight ? m_WallCheckRight : m_WallCheckLeft;
-
-            Collider2D[] collidersWallLeft = Physics2D.OverlapCircleAll(wallCheckPosLeft.position, k_WallCheckRadius, m_WhatIsWall);
-            Collider2D[] collidersWallRight = Physics2D.OverlapCircleAll(wallCheckPosRight.position, k_WallCheckRadius, m_WhatIsWall);
-
-            
-            m_WallJumpDir = Vector2.zero;
-            if (collidersWallLeft.Count() > 0)
-            {
-                m_WallJumpDir = Vector2.right + Vector2.up;
-                Debug.Log("jump At left wall");
-            }
-            else if (collidersWallRight.Count() > 0)
-            {
-                m_WallJumpDir = Vector2.left + Vector2.up;
-                Debug.Log("jump At right wall");
-            }
-
-            m_WallJump = m_WallJumpDir != Vector2.zero;
 
             for (int i = 0; i < colliders.Length; i++)
             {
@@ -83,6 +67,29 @@ namespace UnityStandardAssets._2D
             m_Anim.SetFloat("vSpeed", m_Rigidbody2D.velocity.y);
         }
 
+        private void HandleWallJump()
+        {
+            var wallCheckPosLeft = m_FacingRight ? m_WallCheckLeft : m_WallCheckRight;
+            var wallCheckPosRight = m_FacingRight ? m_WallCheckRight : m_WallCheckLeft;
+
+            Collider2D[] collidersWallLeft = Physics2D.OverlapCircleAll(wallCheckPosLeft.position, k_WallCheckRadius, m_WhatIsWall);
+            Collider2D[] collidersWallRight = Physics2D.OverlapCircleAll(wallCheckPosRight.position, k_WallCheckRadius, m_WhatIsWall);
+
+
+            m_WallJumpDir = Vector2.zero;
+            if (collidersWallLeft.Count() > 0)
+            {
+                m_WallJumpDir = m_WallJumpDirToRight;
+                Debug.Log("jump At left wall");
+            }
+            else if (collidersWallRight.Count() > 0)
+            {
+                m_WallJumpDir = m_WallJumpDirToLeft;
+                Debug.Log("jump At right wall");
+            }
+
+            m_WallJump = m_WallJumpDir != Vector2.zero;
+        }
 
         public void Move(float move, bool crouch, bool jump)
         {
@@ -134,7 +141,7 @@ namespace UnityStandardAssets._2D
             }
             else if (jump && m_WallJump)
             {
-                var dir = m_WallJumpDir * m_JumpForce;
+                var dir = m_WallJumpDir * m_WallJumpForce;
                 m_Rigidbody2D.AddForce(dir);
 
                 Flip();
