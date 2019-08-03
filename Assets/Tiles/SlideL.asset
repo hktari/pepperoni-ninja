@@ -10,10 +10,10 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 13312, guid: 0000000000000000e000000000000000, type: 0}
-  m_Name: TestTile
+  m_Name: SlideL
   m_EditorClassIdentifier: 
-  m_Sprite: {fileID: 21300008, guid: 2a23c00cde465461fb598526b91deedc, type: 3}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_Sprite: {fileID: 21300000, guid: 6b163efe7d6c13446994efa7dd269b83, type: 3}
+  m_Color: {r: 0, g: 0.46209905, b: 0.4811321, a: 1}
   m_Transform:
     e00: 1
     e01: 0
