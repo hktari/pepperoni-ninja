@@ -9,16 +9,19 @@ public class RhytmCanvas : MonoBehaviour
 
     private float m_colorResetTimer;
 
-    private GameObject backgroundImg;
-    private GameObject panelImg;
+    private GameObject background;
+    private GameObject panel;
     private RhytmManager.RhytmAction m_curRhytmState;
-    private Image image;
+    private Image panelImage;
+    private Image backgroundImage;
+
     // Start is called before the first frame update
     void Start()
     {
-        backgroundImg = transform.GetChild(0).gameObject;
-        panelImg = transform.GetChild(1).gameObject;
-        image = panelImg.GetComponent<Image>();
+        background = transform.GetChild(0).gameObject;
+        panel = transform.GetChild(2).gameObject;
+        panelImage = panel.GetComponent<Image>();
+        backgroundImage = background.GetComponent<Image>();
     }
 
     void Update()
@@ -30,30 +33,34 @@ public class RhytmCanvas : MonoBehaviour
         }
 
         Color panelColor = Color.white;
+        Color backgroundColor = Color.grey;
+
         switch (m_curRhytmState)
         {
             case RhytmManager.RhytmAction.None:
                 panelColor = Color.white;
+                backgroundColor = Color.grey;
                 break;
             case RhytmManager.RhytmAction.Failed:
-                panelColor = Color.red;
+                panelColor = backgroundColor = Color.red;
                 break;
             case RhytmManager.RhytmAction.Success:
-                panelColor = Color.green;
+                panelColor = backgroundColor = Color.green;
                 break;
             default:
                 break;
         }
 
-        image.color = panelColor;
+        panelImage.color = panelColor;
+        backgroundImage.color = backgroundColor;
     }
 
     public void UpdateCanvas(float perc)
     {
-        Rect backgroundRect = backgroundImg.GetComponent<RectTransform>().rect;
-        var newX = backgroundImg.transform.position.x + backgroundRect.width * perc;
-        var panelRect = panelImg.GetComponent<RectTransform>().rect;
-        panelImg.transform.position = new Vector3(newX, panelImg.transform.position.y, panelImg.transform.position.z);
+        Rect backgroundRect = background.GetComponent<RectTransform>().rect;
+        var newX = background.transform.position.x + backgroundRect.width * perc;
+        var panelRect = panel.GetComponent<RectTransform>().rect;
+        panel.transform.position = new Vector3(newX, panel.transform.position.y, panel.transform.position.z);
     }
 
     public void DisplayAction(RhytmManager.RhytmAction rhytmAction)

@@ -9,11 +9,12 @@ namespace UnityStandardAssets._2D
     {
         private PlatformerCharacter2D m_Character;
         private bool m_Jump;
-
+        private RhytmManager m_RhytmManager;
 
         private void Awake()
         {
             m_Character = GetComponent<PlatformerCharacter2D>();
+            m_RhytmManager = GameObject.Find("RhytmManager").GetComponent<RhytmManager>();
         }
 
 
@@ -23,6 +24,10 @@ namespace UnityStandardAssets._2D
             {
                 // Read the jump input in Update so button presses aren't missed.
                 m_Jump = CrossPlatformInputManager.GetButtonDown("Jump");
+                if (m_Jump && !m_RhytmManager.TryPerformAction())
+                {
+                    m_Jump = false;
+                }
             }
         }
 

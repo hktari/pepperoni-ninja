@@ -13,10 +13,13 @@ public class RhytmManager : MonoBehaviour
 
     public RhytmCanvas Canvas;
 
-    public float RhytmTimeMax { get; set; } = 1.0f;
+    [SerializeField]
+    public float RhytmTimeMax = 0.5f;
+
+    [SerializeField]
+    public float RhytmActionLeewayInSec = 0.1f;
 
     public float CurRhytmTime { get; set; }
-    public float RhytmActionLeewayInSec { get; set; } = 0.1f;
 
     private bool leftToRight = true;
     
@@ -46,9 +49,10 @@ public class RhytmManager : MonoBehaviour
         Canvas?.UpdateCanvas(CurRhytmTime / RhytmTimeMax);
     }
 
-    public bool CanPerformAction()
+    public bool TryPerformAction()
     {
-        var success = Mathf.Abs(CurRhytmTime - 0.5f) < RhytmActionLeewayInSec;
+        var success = Mathf.Abs(CurRhytmTime - RhytmTimeMax / 2.0f) < RhytmActionLeewayInSec;
+        Debug.Log("SuCCESS: " + success);
         Canvas.DisplayAction(success ? RhytmAction.Success : RhytmAction.Failed);
         return success;
     }
