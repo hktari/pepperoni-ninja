@@ -44,6 +44,7 @@ public class RhytmManager : MonoBehaviour
         if (CurRhytmTime > RhytmTimeMax || CurRhytmTime < 0.0f)
         {
             leftToRight = !leftToRight;
+            CurRhytmTime = Mathf.Clamp(CurRhytmTime, 0, RhytmTimeMax);
         }
 
         Canvas?.UpdateCanvas(CurRhytmTime / RhytmTimeMax);
