@@ -24,7 +24,7 @@ namespace UnityStandardAssets._2D
         private Transform m_WallCheckLeft;
         const float k_CeilingRadius = .01f; // Radius of the overlap circle to determine if the player can stand up
         private Transform m_WallCheckRight;
-        private Animator m_Anim;            // Reference to the player's animator component.
+        public Animator m_Anim;            // Reference to the player's animator component.
         private Rigidbody2D m_Rigidbody2D;
         private bool m_FacingRight = true;  // For determining which way the player is currently facing.
         private CircleCollider2D m_FeetCircleCollider;
@@ -39,7 +39,7 @@ namespace UnityStandardAssets._2D
             m_CeilingCheck = transform.Find("CeilingCheck");
             m_WallCheckLeft = transform.Find("WallCheckLeft");
             m_WallCheckRight = transform.Find("WallCheckRight");
-            m_Anim = GetComponent<Animator>();
+            if(m_Anim == null ) m_Anim = GetComponent<Animator>();
             m_Rigidbody2D = GetComponent<Rigidbody2D>();
             m_FeetCircleCollider = GetComponent<CircleCollider2D>();
         }
