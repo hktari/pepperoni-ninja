@@ -26,9 +26,13 @@ public class RhytmManager : MonoBehaviour
     private bool leftToRight = true;
 
     private float m_origRhytmTime;
+
+    private SoundManager m_SoundManager;
+
     // Start is called before the first frame update
     void Start()
     {
+        m_SoundManager = GameObject.Find("SoundManager").GetComponent<SoundManager>();
         m_origRhytmTime = RhytmTimeMax;
     }
 
@@ -38,10 +42,14 @@ public class RhytmManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (Time.time - timeOfLastAction > ComboBreaksInSec)
+        if (RhytmTimeMax != m_origRhytmTime)
         {
-            RhytmTimeMax = m_origRhytmTime;
-            Canvas.ResetPanelSize();
+            if (Time.time - timeOfLastAction > ComboBreaksInSec)
+            {
+                RhytmTimeMax = m_origRhytmTime;
+                Canvas.ResetPanelSize();
+                m_SoundManager.PlayAudio(m_SoundManager.SpeedDownAudio);
+            }
         }
 
         if (leftToRight)
@@ -71,10 +79,12 @@ public class RhytmManager : MonoBehaviour
         {
             RhytmTimeMax *= SpeedUpgradeFactor;
             timeOfLastAction = Time.time;
+            m_SoundManager.PlayAudio(m_SoundManager.SpeedupAudio);
         }
         else
         {
-            RhytmTimeMax = m_origRhytmTime; 
+            RhytmTimeMax = m_origRhytmTime;
+            m_SoundManager.PlayAudio(m_SoundManager.SpeedDownAudio);
         }
         Canvas.DisplayAction(success ? RhytmAction.Success : RhytmAction.Failed);
         return success;
