@@ -44,7 +44,6 @@ GameObject:
   - component: {fileID: 5800000}
   - component: {fileID: 5000000}
   - component: {fileID: 11400002}
-  - component: {fileID: 11400000}
   - component: {fileID: 6100000}
   m_Layer: 0
   m_Name: CharacterRobotBoy
@@ -212,18 +211,6 @@ MonoBehaviour:
   m_WallJumpDirToLeft: {x: -0.5, y: 1}
   m_WallJumpDirToRight: {x: 0.5, y: 1}
   m_Anim: {fileID: 991330796}
---- !u!114 &11400000
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 100002}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c3d7b34a3bb2d4e4b926e7e729d3d410, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!61 &6100000
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -1874,7 +1861,7 @@ PrefabInstance:
     - target: {fileID: 4839948775746111465, guid: 6df10005323487741928b373a16b655c,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: -0.707
+      value: -0.802
       objectReference: {fileID: 0}
     - target: {fileID: 4839948775746111465, guid: 6df10005323487741928b373a16b655c,
         type: 3}
