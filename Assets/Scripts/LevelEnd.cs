@@ -25,6 +25,8 @@ public class LevelEnd: MonoBehaviour {
         {
             disableUIOnDone.gameObject.SetActive(false);
             camFinal.Play("FinishFinalLevel");
+            yield return new WaitForSeconds(10);
+            SceneManager.LoadScene(loadScene);
         }
         else SceneManager.LoadScene(loadScene);
     }
