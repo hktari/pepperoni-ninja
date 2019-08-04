@@ -34,7 +34,7 @@ public class Shuriken : MonoBehaviour
         {
             Debug.Log("Enemy killed");
             Destroy(collision.gameObject);
-            Instantiate(Splash);
+            Instantiate(Splash, this.transform.position, this.transform.rotation);
             Destroy(this.gameObject);
         }
 
