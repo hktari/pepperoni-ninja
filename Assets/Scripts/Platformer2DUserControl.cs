@@ -10,6 +10,7 @@ namespace UnityStandardAssets._2D
         private PlatformerCharacter2D m_Character;
         private bool m_Jump;
         private RhytmManager m_RhytmManager;
+        public GameObject Shuriken;
 
         private void Awake()
         {
@@ -28,6 +29,8 @@ namespace UnityStandardAssets._2D
                 {
                     m_Jump = false;
                 }
+                if (CrossPlatformInputManager.GetButtonDown("Fire1"))
+                    Instantiate(Shuriken, this.transform.position, this.transform.rotation);
             }
         }
 
