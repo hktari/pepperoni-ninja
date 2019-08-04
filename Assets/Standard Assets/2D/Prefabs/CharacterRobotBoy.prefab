@@ -199,7 +199,7 @@ MonoBehaviour:
   m_MaxSpeed: 10
   m_JumpForce: 600
   m_CrouchSpeed: 0.25
-  m_AirControl: 0
+  m_AirControl: 1
   m_WhatIsGround:
     serializedVersion: 2
     m_Bits: 55
@@ -1853,6 +1853,11 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 400002}
     m_Modifications:
+    - target: {fileID: 4839948775745690569, guid: 6df10005323487741928b373a16b655c,
+        type: 3}
+      propertyPath: m_Name
+      value: monkey_asset
+      objectReference: {fileID: 0}
     - target: {fileID: 4839948775746111465, guid: 6df10005323487741928b373a16b655c,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -1907,11 +1912,6 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4839948775745690569, guid: 6df10005323487741928b373a16b655c,
-        type: 3}
-      propertyPath: m_Name
-      value: monkey_asset
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 6df10005323487741928b373a16b655c, type: 3}
