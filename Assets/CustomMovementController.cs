@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class CustomMovementController : MonoBehaviour
@@ -20,12 +21,21 @@ public class CustomMovementController : MonoBehaviour
     public float m_jumpCD;
     public float GravityMultiplier = 3.0f;
 
-    private float m_jumpStartY;
+    public float k_WallCheckRadius = 2f;
+    public Vector2 m_WallJumpDirToLeft = Vector2.left + Vector2.up;
+    public Vector2 m_WallJumpDirToRight = Vector2.right + Vector2.up;
+
     private Rigidbody2D m_Rigidbody2D;
     private bool jump;
     private bool falling;
     private bool m_IsOnGround;
     private bool m_IsOnWall;
+
+    private Transform m_WallCheckLeft;
+    private Transform m_WallCheckRight;
+    public Animator m_Anim;            // Reference to the player's animator component.
+    private bool m_FacingRight = true;
+    private Transform m_collidingWallTransform;
 
     // Start is called before the first frame update
     void Start()
@@ -33,51 +43,23 @@ public class CustomMovementController : MonoBehaviour
         // Setting up references.
         //m_GroundCheck = transform.Find("GroundCheck");
         //m_CeilingCheck = transform.Find("CeilingCheck");
-        //m_WallCheckLeft = transform.Find("WallCheckLeft");
-        //m_WallCheckRight = transform.Find("WallCheckRight");
-        //if (m_Anim == null) m_Anim = GetComponent<Animator>();
+        m_WallCheckLeft = transform.Find("WallCheckLeft");
+        m_WallCheckRight = transform.Find("WallCheckRight");
+        if (m_Anim == null) m_Anim = GetComponent<Animator>();
         m_Rigidbody2D = GetComponent<Rigidbody2D>();
-        //m_FeetCircleCollider = GetComponent<CircleCollider2D>();
     }
 
     private void FixedUpdate()
     {
-        // float vertVelocity = 0.0f;
-        ////vertVelocity -= Gravity * Time.fixedDeltaTime;
-        // if (jump)
-        // {
-        //     m_jumpCD += Time.fixedDeltaTime;
-
-        //     vertVelocity = m_jumpCD * m_jumpCD * JumpForce / 2.0f;
-
-        //     if (m_jumpCD >= JumpTimeInSec)
-        //     {
-        //         jump = false;
-        //         falling = true;
-        //         m_jumpCD = 0.0f;
-        //         m_jumpStartY = m_Rigidbody2D.position.y;
-        //     }
-        // }
-        // else if (falling)
-        // {
-        //     m_jumpCD += Time.fixedDeltaTime;
-
-        //     vertVelocity = m_jumpCD * m_jumpCD * -Gravity / 2.0f;
-
-        //     if (m_jumpCD >= JumpTimeInSec)
-        //     {
-        //         jump = false;
-        //         falling = false;
-        //         m_jumpCD = 0.0f;
-        //     }
-        // }
-        // float newY = vertVelocity != 0.0f ? m_jumpStartY + vertVelocity : m_Rigidbody2D.position.y;
         m_IsOnGround = GetComponent<CapsuleCollider2D>().IsTouchingLayers(IsGroundMask);
         m_IsOnWall = !m_IsOnGround && GetComponent<CapsuleCollider2D>().IsTouchingLayers(IsWallMask);
 
         Vector2 gravity = Vector2.down * Gravity;
         Vector2 newVelocity = Velocity + gravity;
-        
+
+
+        float horiz = Input.GetAxis("Horizontal");
+
         if (jump)
         {
             if (m_IsOnGround)
@@ -87,15 +69,12 @@ public class CustomMovementController : MonoBehaviour
             }
             else if (m_IsOnWall)
             {
-                newVelocity = new Vector2(-1.0f, 1.0f) * WallJumpForce;
+                Flip();
+                newVelocity = GetWallJumpDir() * WallJumpForce;
                 Debug.Log("WALL JUMP");
                 jump = false;
             }
         }
-
-        float horiz = Input.GetAxis("Horizontal");
-
-        //var vertVelocity = Velocity.y - GravityMultiplier * Gravity * Mathf.Pow(Time.fixedDeltaTime, 2);
 
         if (m_IsOnGround)
         {
@@ -103,7 +82,6 @@ public class CustomMovementController : MonoBehaviour
 
             if (!jump)
             {
-                //vertVelocity = Mathf.Max(0.0f, vertVelocity);
                 newVelocity.y = Mathf.Max(0.0f, newVelocity.y);
             }
         }
@@ -112,15 +90,26 @@ public class CustomMovementController : MonoBehaviour
             newVelocity += Vector2.right * horiz * MaxSpeedAirborne;
         }
 
-
-        //Velocity = new Vector2(
-        //    Mathf.Clamp(horiz * MaxSpeed * Time.fixedDeltaTime, -MaxSpeed, MaxSpeed),
-        //    vertVelocity);
-        //horiz *= horiz;
-
         Velocity = new Vector2(
             Mathf.Clamp(newVelocity.x, -MaxSpeed, MaxSpeed),
             Mathf.Max(newVelocity.y, -MaxFallSpeed));
+
+        m_Anim.SetFloat("Speed", Mathf.Abs(Velocity.x));
+        m_Anim.SetFloat("vSpeed", Velocity.y);
+        m_Anim.SetBool("Ground", m_IsOnGround);
+
+        // If the input is moving the player right and the player is facing left...
+        if (Velocity.x > 0 && !m_FacingRight)
+        {
+            // ... flip the player.
+            Flip();
+        }
+        // Otherwise if the input is moving the player left and the player is facing right...
+        else if (Velocity.x < 0 && m_FacingRight)
+        {
+            // ... flip the player.
+            Flip();
+        }
 
         m_Rigidbody2D.MovePosition(
             new Vector2(m_Rigidbody2D.transform.position.x, m_Rigidbody2D.transform.position.y) + Velocity * Time.fixedDeltaTime);
@@ -130,5 +119,43 @@ public class CustomMovementController : MonoBehaviour
     void Update()
     {
         jump = Input.GetButtonDown("Jump");
+    }
+
+
+    private Vector2 GetWallJumpDir()
+    {
+        var wallCheckPosLeft = m_FacingRight ? m_WallCheckLeft : m_WallCheckRight;
+        var wallCheckPosRight = m_FacingRight ? m_WallCheckRight : m_WallCheckLeft;
+
+        Collider2D[] collidersWallLeft = Physics2D.OverlapCircleAll(wallCheckPosLeft.position, k_WallCheckRadius, IsWallMask);
+        Collider2D[] collidersWallRight = Physics2D.OverlapCircleAll(wallCheckPosRight.position, k_WallCheckRadius, IsWallMask);
+
+        var m_WallJumpDir = Vector2.zero;
+        m_collidingWallTransform = null;
+        if (collidersWallLeft.Count() > 0)
+        {
+            m_collidingWallTransform = collidersWallLeft.First().transform;
+            m_WallJumpDir = m_WallJumpDirToRight;
+            Debug.Log("jump At left wall");
+        }
+        else if (collidersWallRight.Count() > 0)
+        {
+            m_collidingWallTransform = collidersWallRight.First().transform;
+            m_WallJumpDir = m_WallJumpDirToLeft;
+            Debug.Log("jump At right wall");
+        }
+
+        return m_WallJumpDir;
+    }
+
+    private void Flip()
+    {
+        // Switch the way the player is labelled as facing.
+        m_FacingRight = !m_FacingRight;
+
+        // Multiply the player's x local scale by -1.
+        Vector3 theScale = transform.localScale;
+        theScale.x *= -1;
+        transform.localScale = theScale;
     }
 }
