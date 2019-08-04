@@ -86,7 +86,7 @@ MonoBehaviour:
   MaxFallSpeed: 50
   Velocity: {x: 0, y: 0}
   Gravity: 2
-  JumpForce: 25
+  JumpForce: 40
   WallJumpForce: 25
   IsGroundMask:
     serializedVersion: 2
