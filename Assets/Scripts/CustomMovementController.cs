@@ -41,6 +41,7 @@ public class CustomMovementController : MonoBehaviour
     private bool m_FacingRight = true;
     private Transform m_collidingWallTransform;
     private RhytmManager m_RhytmManager;
+    private SoundManager m_SoundManager;
 
     // Start is called before the first frame update
     void Start()
@@ -52,13 +53,21 @@ public class CustomMovementController : MonoBehaviour
         m_RhytmManager = GameObject.Find("RhytmManager").GetComponent<RhytmManager>();
         if (m_Anim == null) m_Anim = GetComponent<Animator>();
         m_Rigidbody2D = GetComponent<Rigidbody2D>();
+        m_SoundManager = transform.Find("SoundManager").GetComponent<SoundManager>();
     }
 
     private void FixedUpdate()
     {
+        var wasOnGround = m_IsOnGround;
+
         m_IsOnGround = Physics2D.OverlapCircleAll(m_GroundCheck.position, k_GroundCheckRadius, IsGroundMask)
             .Where(c => c.gameObject != gameObject && !c.isTrigger) // Ignore triggers and self
             .Count() > 0;
+
+        if (!wasOnGround && m_IsOnGround)
+        {
+            m_SoundManager.PlayAudio(m_SoundManager.LandAudio);
+        }
 
         var wallJumpDir = GetWallJumpDir();
         m_IsOnWall = !m_IsOnGround && wallJumpDir != Vector2.zero;
@@ -73,12 +82,13 @@ public class CustomMovementController : MonoBehaviour
             if (m_IsOnGround && m_RhytmManager.TryPerformAction())
             {
                 newVelocity += Vector2.up * JumpForce;
+                m_SoundManager.PlayAudio(m_SoundManager.JumpAudio);
             }
             else if (m_IsOnWall && m_RhytmManager.TryPerformAction())
             {
                 Flip();
                 newVelocity = wallJumpDir * WallJumpForce;
-                Debug.Log("WALL JUMP");
+                m_SoundManager.PlayAudio(m_SoundManager.JumpAudio);
             }
             
             // Handled
@@ -136,6 +146,7 @@ public class CustomMovementController : MonoBehaviour
         if (CrossPlatformInputManager.GetButtonDown("Fire1"))
         {
             Instantiate(Shuriken, new Vector3(transform.position.x, transform.position.y, 100), this.transform.rotation);
+            m_SoundManager.PlayAudio(m_SoundManager.ShootAudio);
         }
     }
 
