@@ -14,14 +14,15 @@ public class RhytmCanvas : MonoBehaviour
     private RhytmManager.RhytmAction m_curRhytmState;
     private Image panelImage;
     private Image backgroundImage;
-    public Sprite greenbackground;
-    public Sprite redbackground;
+    public Sprite greenBackground;
+    public Sprite redBackground;
+    public Sprite defaultBackground;
 
     // Start is called before the first frame update
     void Start()
     {
         panelImage = panel.GetComponent<Image>();
-        backgroundImage = panel.GetComponent<Image>();
+        backgroundImage = background.GetComponent<Image>();
     }
 
     void Update()
@@ -32,27 +33,20 @@ public class RhytmCanvas : MonoBehaviour
             m_curRhytmState = RhytmManager.RhytmAction.None;
         }
 
-        Color panelColor = Color.white;
-        Color backgroundColor = Color.white;
-
         switch (m_curRhytmState)
         {
             case RhytmManager.RhytmAction.None:
-                panelColor = Color.white;
-                backgroundColor = Color.white;
+                backgroundImage.sprite = defaultBackground;
                 break;
             case RhytmManager.RhytmAction.Failed:
-                panelColor = backgroundColor = Color.red;
+                backgroundImage.sprite = redBackground;
                 break;
             case RhytmManager.RhytmAction.Success:
-                panelColor = backgroundColor = Color.green;
+                backgroundImage.sprite = greenBackground;
                 break;
             default:
                 break;
         }
-
-        panelImage.color = panelColor;
-        backgroundImage.color = backgroundColor;
     }
 
     public void UpdateCanvas(float perc)
