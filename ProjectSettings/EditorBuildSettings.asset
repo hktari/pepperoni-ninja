@@ -18,6 +18,12 @@ EditorBuildSettings:
     path: Assets/Scenes/Level2.unity
     guid: cff3817c203d9634cb06f2c91eab94ca
   - enabled: 1
-    path: Assets/Scenes/Lvl3_MiddleBuildings.unity
+    path: Assets/Scenes/Level3_MiddleBuildings.unity
     guid: c605f2d56a36ce244826ac93fd779148
+  - enabled: 1
+    path: Assets/Scenes/Level4_Rooftops.unity
+    guid: 5ba4eef31b81b2d449f934564cb272b7
+  - enabled: 1
+    path: Assets/Scenes/Level5_Final.unity
+    guid: f7743565a36877748b05be10cb015900
   m_configObjects: {}
