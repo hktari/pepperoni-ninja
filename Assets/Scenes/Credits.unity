@@ -563,7 +563,18 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: "Art : Jude , Veronica\nDev: Marco\nMusic: \nArt/Dev: Kyrylo Samoilenko\n"
+  m_Text: 'Art : JC Roxas, Veronika Burger
+
+
+    Dev: Marko Laharnar, Bostjan Kamnik
+
+
+    Art/Dev: Kyrylo Samoilenko
+
+
+    Music: Luka Rous
+
+'
 --- !u!222 &1414636771
 CanvasRenderer:
   m_ObjectHideFlags: 0
