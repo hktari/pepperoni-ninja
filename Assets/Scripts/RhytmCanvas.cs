@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using Extensions;
 
 public class RhytmCanvas : MonoBehaviour
 {
@@ -11,8 +12,10 @@ public class RhytmCanvas : MonoBehaviour
 
     [SerializeField] private GameObject background;
     [SerializeField] private GameObject panel;
+    [SerializeField] private GameObject runningPanel;
     private RhytmManager.RhytmAction m_curRhytmState;
     private Image panelImage;
+    private Image runningPanelImage;
     private Image backgroundImage;
     public Sprite greenBackground;
     public Sprite redBackground;
@@ -22,6 +25,7 @@ public class RhytmCanvas : MonoBehaviour
     void Start()
     {
         panelImage = panel.GetComponent<Image>();
+        runningPanelImage = runningPanel.GetComponent<Image>();
         backgroundImage = background.GetComponent<Image>();
     }
 
@@ -49,12 +53,37 @@ public class RhytmCanvas : MonoBehaviour
         }
     }
 
+    public bool TryExecuteAction()
+    {
+        var success = runningPanel.GetComponent<TriggerHandler>().FirstCollider != null;
+        var panelRect = panel.GetComponent<RectTransform>();
+        if (success)
+        {
+            var trns = panelRect.parent.transform;
+            trns.localScale = new Vector2(
+                Mathf.Max(0.10f, trns.localScale.x * 0.75f),
+                1.0f);
+        }
+        else
+        {
+            panelRect.transform.parent.transform.localScale = Vector2.one;
+        }
+
+        return success;
+    }
+
+    public void ResetPanelSize()
+    {
+        var panelRect = panel.GetComponent<RectTransform>();
+        panelRect.transform.parent.transform.localScale = Vector2.one;
+    }
+
     public void UpdateCanvas(float perc)
     {
         Rect backgroundRect = background.GetComponent<RectTransform>().rect;
         var newX = background.transform.position.x + backgroundRect.width * perc;
-        var panelRect = panel.GetComponent<RectTransform>().rect;
-        panel.transform.position = new Vector3(newX, panel.transform.position.y, panel.transform.position.z);
+        var panelRect = runningPanel.GetComponent<RectTransform>().rect;
+        runningPanel.transform.position = new Vector3(newX, runningPanel.transform.position.y, runningPanel.transform.position.z);
     }
 
     public void DisplayAction(RhytmManager.RhytmAction rhytmAction)
