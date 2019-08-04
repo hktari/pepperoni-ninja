@@ -9,6 +9,7 @@ public class SoundManager : MonoBehaviour
     public AudioSource ShootAudio;
     public AudioSource SpeedupAudio;
     public AudioSource SpeedDownAudio;
+    public AudioSource EndLevelAudio;
 
     public void PlayAudio(AudioSource audioSource)
     {
