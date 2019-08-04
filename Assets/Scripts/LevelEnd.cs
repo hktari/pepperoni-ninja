@@ -8,6 +8,9 @@ public class LevelEnd: MonoBehaviour {
 
     public string loadScene = "";
     public PlayableDirector track;
+    public bool finalLevel = false;
+    public Animation camFinal;
+    public Transform disableUIOnDone;
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
@@ -18,7 +21,11 @@ public class LevelEnd: MonoBehaviour {
     private IEnumerator WaitForSceneLoad()
     {
         yield return new WaitForSeconds(3);
-     SceneManager.LoadScene(loadScene);
-
+        if (finalLevel)
+        {
+            disableUIOnDone.gameObject.SetActive(false);
+            camFinal.Play("FinishFinalLevel");
+        }
+        else SceneManager.LoadScene(loadScene);
     }
 }
