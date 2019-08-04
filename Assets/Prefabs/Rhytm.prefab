@@ -510,8 +510,8 @@ MonoBehaviour:
   background: {fileID: 8160789989803392624}
   panel: {fileID: 4307133779373988640}
   runningPanel: {fileID: 1267595418469583015}
-  greenBackground: {fileID: 21300000, guid: 3fc84acc1b40d4b9a9018f1a9664af67, type: 3}
-  redBackground: {fileID: 21300000, guid: e7d3f6e0a4af349f89d1738233005409, type: 3}
+  greenBackground: {fileID: 21300000, guid: ed04c0a3d3adc4f12a0c014c18069bed, type: 3}
+  redBackground: {fileID: 21300000, guid: ed04c0a3d3adc4f12a0c014c18069bed, type: 3}
   defaultBackground: {fileID: 21300000, guid: ed04c0a3d3adc4f12a0c014c18069bed, type: 3}
 --- !u!1 &8747715392496542203
 GameObject:
