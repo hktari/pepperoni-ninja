@@ -57,7 +57,7 @@ public class CustomMovementController : MonoBehaviour
     private void FixedUpdate()
     {
         m_IsOnGround = Physics2D.OverlapCircleAll(m_GroundCheck.position, k_GroundCheckRadius, IsGroundMask)
-            .Where(c => c.gameObject != gameObject)
+            .Where(c => c.gameObject != gameObject && !c.isTrigger) // Ignore triggers and self
             .Count() > 0;
         m_IsOnWall = !m_IsOnGround && GetComponent<CapsuleCollider2D>().IsTouchingLayers(IsWallMask);
 
