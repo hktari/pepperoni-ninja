@@ -4936,7 +4936,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   bulletSpeed: 0.5
-  Splash: {fileID: 0}
+  Splash: {fileID: 7209208043045001116, guid: 6bf24a1d842a64ef9a3d40a6deb4bd89, type: 3}
+  Splash2: {fileID: 4219239788988116886, guid: f223df5d2636f4925891877fa945e5db, type: 3}
+  Splash3: {fileID: 3547776306700350795, guid: bce549616887e40199d6d716aea774bf, type: 3}
 --- !u!58 &4519834494638473207
 CircleCollider2D:
   m_ObjectHideFlags: 0
