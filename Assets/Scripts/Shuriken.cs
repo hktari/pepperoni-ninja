@@ -6,6 +6,8 @@ public class Shuriken : MonoBehaviour
 {
     public float bulletSpeed = 0.5f;
     public GameObject Splash;
+    public GameObject Splash2;
+    public GameObject Splash3;
     private GameObject Player;
     private float direction;
     private Rigidbody2D rigid;
@@ -32,6 +34,8 @@ public class Shuriken : MonoBehaviour
         {
             Debug.Log("Enemy killed");
             Destroy(collision.gameObject);
+            Instantiate(Splash, this.transform.position, this.transform.rotation);
+            Destroy(this.gameObject);
         }
 
     }
