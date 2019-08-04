@@ -262,7 +262,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -165.4, y: -40}
+  m_AnchoredPosition: {x: -165.4, y: -30.9}
   m_SizeDelta: {x: 82, y: 77}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &8160789991096944327
@@ -417,5 +417,6 @@ MonoBehaviour:
   PanelColorResetTime: 0.35
   background: {fileID: 8160789989803392624}
   panel: {fileID: 8160789991096944330}
-  greenbackground: {fileID: 21300000, guid: 3fc84acc1b40d4b9a9018f1a9664af67, type: 3}
-  redbackground: {fileID: 21300000, guid: e7d3f6e0a4af349f89d1738233005409, type: 3}
+  greenBackground: {fileID: 21300000, guid: 3fc84acc1b40d4b9a9018f1a9664af67, type: 3}
+  redBackground: {fileID: 21300000, guid: e7d3f6e0a4af349f89d1738233005409, type: 3}
+  defaultBackground: {fileID: 21300000, guid: ed04c0a3d3adc4f12a0c014c18069bed, type: 3}
