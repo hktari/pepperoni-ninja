@@ -6,7 +6,7 @@ public class Shuriken : MonoBehaviour
 {
     public float bulletSpeed = 0.5f;
     public GameObject Splash;
-    public GameObject Player;
+    private GameObject Player;
     private float direction;
     // Start is called before the first frame update
     void Start()
