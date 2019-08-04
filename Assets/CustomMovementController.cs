@@ -5,9 +5,14 @@ using UnityEngine;
 public class CustomMovementController : MonoBehaviour
 {
     public float MaxSpeed = 10.0f;
+    public float MaxSpeedAirborne = 1.0f;
+    public float MaxFallSpeed = 30.0f;
+
     public Vector2 Velocity;
     public float Gravity = 9.8f;
     public float JumpForce = 3.0f;
+    public float WallJumpForce = 10.0f;
+
     public LayerMask IsGroundMask;
     public LayerMask IsWallMask;
 
@@ -70,36 +75,55 @@ public class CustomMovementController : MonoBehaviour
         m_IsOnGround = GetComponent<CapsuleCollider2D>().IsTouchingLayers(IsGroundMask);
         m_IsOnWall = !m_IsOnGround && GetComponent<CapsuleCollider2D>().IsTouchingLayers(IsWallMask);
 
+        Vector2 gravity = Vector2.down * Gravity;
+        Vector2 newVelocity = Velocity + gravity;
+        
         if (jump)
         {
             if (m_IsOnGround)
             {
-                Velocity.y += JumpForce;
+                newVelocity += Vector2.up * JumpForce;
+                jump = false;
             }
             else if (m_IsOnWall)
             {
-                Velocity += new Vector2(-1.0f, 1.0f) * JumpForce;
-            }
-        }
-
-        var vertVelocity = Velocity.y - GravityMultiplier * Gravity * Mathf.Pow(Time.fixedDeltaTime, 2);
-     
-        if (m_IsOnGround)
-        {
-            if (!jump)
-            {
-                vertVelocity = Mathf.Max(0.0f, vertVelocity);
+                newVelocity = new Vector2(-1.0f, 1.0f) * WallJumpForce;
+                Debug.Log("WALL JUMP");
+                jump = false;
             }
         }
 
         float horiz = Input.GetAxis("Horizontal");
 
+        //var vertVelocity = Velocity.y - GravityMultiplier * Gravity * Mathf.Pow(Time.fixedDeltaTime, 2);
+
+        if (m_IsOnGround)
+        {
+            newVelocity.x = horiz * MaxSpeed;
+
+            if (!jump)
+            {
+                //vertVelocity = Mathf.Max(0.0f, vertVelocity);
+                newVelocity.y = Mathf.Max(0.0f, newVelocity.y);
+            }
+        }
+        else
+        {
+            newVelocity += Vector2.right * horiz * MaxSpeedAirborne;
+        }
+
+
+        //Velocity = new Vector2(
+        //    Mathf.Clamp(horiz * MaxSpeed * Time.fixedDeltaTime, -MaxSpeed, MaxSpeed),
+        //    vertVelocity);
+        //horiz *= horiz;
+
         Velocity = new Vector2(
-            Mathf.Clamp(horiz * MaxSpeed * Time.fixedDeltaTime, -MaxSpeed, MaxSpeed),
-            vertVelocity);
+            Mathf.Clamp(newVelocity.x, -MaxSpeed, MaxSpeed),
+            Mathf.Max(newVelocity.y, -MaxFallSpeed));
 
         m_Rigidbody2D.MovePosition(
-            new Vector2(m_Rigidbody2D.transform.position.x, m_Rigidbody2D.transform.position.y) + Velocity);
+            new Vector2(m_Rigidbody2D.transform.position.x, m_Rigidbody2D.transform.position.y) + Velocity * Time.fixedDeltaTime);
     }
 
     // Update is called once per frame
