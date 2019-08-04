@@ -22,7 +22,7 @@ public class SlowMo : MonoBehaviour
             {
                 Debug.Log("Time slowed");
                 falling++;
-                Time.timeScale = 0.3f;
+                Time.timeScale = 0.5f;
             }
             else if (falling >= numOfCollisionsOnPlayer) 
             {
