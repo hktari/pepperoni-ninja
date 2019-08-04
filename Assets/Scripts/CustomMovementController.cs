@@ -2,9 +2,12 @@
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using UnityStandardAssets.CrossPlatformInput;
 
 public class CustomMovementController : MonoBehaviour
 {
+    public GameObject Shuriken;
+
     public float MaxSpeed = 10.0f;
     public float MaxSpeedAirborne = 1.0f;
     public float MaxFallSpeed = 30.0f;
@@ -22,7 +25,7 @@ public class CustomMovementController : MonoBehaviour
     public float GravityMultiplier = 3.0f;
 
     public float k_GroundCheckRadius = 0.2f;
-    public float k_WallCheckRadius = 2f;
+    public float k_WallCheckWidth = 2f;
     public Vector2 m_WallJumpDirToLeft = Vector2.left + Vector2.up;
     public Vector2 m_WallJumpDirToRight = Vector2.right + Vector2.up;
 
@@ -54,9 +57,11 @@ public class CustomMovementController : MonoBehaviour
     private void FixedUpdate()
     {
         m_IsOnGround = Physics2D.OverlapCircleAll(m_GroundCheck.position, k_GroundCheckRadius, IsGroundMask)
-            .Where(c => c.gameObject != gameObject)
+            .Where(c => c.gameObject != gameObject && !c.isTrigger) // Ignore triggers and self
             .Count() > 0;
-        m_IsOnWall = !m_IsOnGround && GetComponent<CapsuleCollider2D>().IsTouchingLayers(IsWallMask);
+
+        var wallJumpDir = GetWallJumpDir();
+        m_IsOnWall = !m_IsOnGround && wallJumpDir != Vector2.zero;
 
         Vector2 gravity = Vector2.down * Gravity;
         Vector2 newVelocity = Velocity + gravity;
@@ -73,7 +78,7 @@ public class CustomMovementController : MonoBehaviour
             else if (m_IsOnWall)
             {
                 Flip();
-                newVelocity = GetWallJumpDir() * WallJumpForce;
+                newVelocity = wallJumpDir * WallJumpForce;
                 Debug.Log("WALL JUMP");
                 jump = false;
             }
@@ -126,6 +131,11 @@ public class CustomMovementController : MonoBehaviour
         {
             jump = true;
         }
+
+        if (CrossPlatformInputManager.GetButtonDown("Fire1"))
+        {
+            Instantiate(Shuriken, new Vector3(transform.position.x, transform.position.y, 100), this.transform.rotation);
+        }
     }
 
 
@@ -134,22 +144,17 @@ public class CustomMovementController : MonoBehaviour
         var wallCheckPosLeft = m_FacingRight ? m_WallCheckLeft : m_WallCheckRight;
         var wallCheckPosRight = m_FacingRight ? m_WallCheckRight : m_WallCheckLeft;
 
-        Collider2D[] collidersWallLeft = Physics2D.OverlapCircleAll(wallCheckPosLeft.position, k_WallCheckRadius, IsWallMask);
-        Collider2D[] collidersWallRight = Physics2D.OverlapCircleAll(wallCheckPosRight.position, k_WallCheckRadius, IsWallMask);
+        bool isTouchingLeft = wallCheckPosLeft.GetComponent<BoxCollider2D>().IsTouchingLayers(IsWallMask);
+        bool isTouchingRight = wallCheckPosRight.GetComponent<BoxCollider2D>().IsTouchingLayers(IsWallMask);
 
         var m_WallJumpDir = Vector2.zero;
-        m_collidingWallTransform = null;
-        if (collidersWallLeft.Count() > 0)
+        if (isTouchingLeft)
         {
-            m_collidingWallTransform = collidersWallLeft.First().transform;
-            m_WallJumpDir = m_WallJumpDirToRight;
-            Debug.Log("jump At left wall");
+            m_WallJumpDir += m_WallJumpDirToRight;
         }
-        else if (collidersWallRight.Count() > 0)
+        if (isTouchingRight)
         {
-            m_collidingWallTransform = collidersWallRight.First().transform;
-            m_WallJumpDir = m_WallJumpDirToLeft;
-            Debug.Log("jump At right wall");
+            m_WallJumpDir += m_WallJumpDirToLeft;
         }
 
         return m_WallJumpDir;
@@ -168,11 +173,20 @@ public class CustomMovementController : MonoBehaviour
 
     private void OnDrawGizmos()
     {
-        if (m_GroundCheck == null)
+        if (m_GroundCheck != null)
         {
-            return;
+            Gizmos.DrawWireSphere(m_GroundCheck.position, k_GroundCheckRadius); ;
         }
 
-        Gizmos.DrawWireSphere(m_GroundCheck.position, k_GroundCheckRadius);
+        //if (m_WallCheckLeft != null)
+        //{
+        //    Gizmos.DrawWireCube(m_WallCheckLeft.position, new Vector3(k_WallCheckWidth * 0.5f, k_WallCheckWidth, 1.0f));
+        //}
+
+
+        //if (m_WallCheckRight != null)
+        //{
+        //    Gizmos.DrawWireSphere(m_WallCheckRight.position, new Vector3(k_WallCheckWidth * 0.5f, k_WallCheckWidth, 1.0f));
+        //}
     }
 }
