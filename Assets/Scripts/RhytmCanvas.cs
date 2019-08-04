@@ -9,8 +9,8 @@ public class RhytmCanvas : MonoBehaviour
 
     private float m_colorResetTimer;
 
-    private GameObject background;
-    private GameObject panel;
+    [SerializeField] private GameObject background;
+    [SerializeField] private GameObject panel;
     private RhytmManager.RhytmAction m_curRhytmState;
     private Image panelImage;
     private Image backgroundImage;
@@ -18,10 +18,8 @@ public class RhytmCanvas : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        background = transform.GetChild(0).gameObject;
-        panel = transform.GetChild(2).gameObject;
         panelImage = panel.GetComponent<Image>();
-        backgroundImage = background.GetComponent<Image>();
+        backgroundImage = panel.GetComponent<Image>();
     }
 
     void Update()

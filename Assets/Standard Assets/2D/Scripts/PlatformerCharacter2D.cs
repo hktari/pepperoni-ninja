@@ -1,6 +1,7 @@
 using System;
 using UnityEngine;
 using System.Linq;
+using UnityStandardAssets._2D;
 
 namespace UnityStandardAssets._2D
 {
@@ -9,7 +10,7 @@ namespace UnityStandardAssets._2D
         [SerializeField] private float m_MaxSpeed = 10f;                    // The fastest the player can travel in the x axis.
         [SerializeField] private float m_JumpForce = 400f;                  // Amount of force added when the player jumps.
         [Range(0, 1)] [SerializeField] private float m_CrouchSpeed = .36f;  // Amount of maxSpeed applied to crouching movement. 1 = 100%
-        [SerializeField] private bool m_AirControl = false;                 // Whether or not a player can steer while jumping;
+        [SerializeField] private bool m_AirControl = true;                 // Whether or not a player can steer while jumping;
         [SerializeField] private LayerMask m_WhatIsGround;                  // A mask determining what is ground to the character
         [SerializeField] private LayerMask m_WhatIsWall;                  // A mask determining what is ground to the character
         public float k_WallCheckRadius = 2f;
@@ -31,6 +32,10 @@ namespace UnityStandardAssets._2D
 
         private bool m_WallJump = false;
         private Vector2 m_WallJumpDir;
+        // The wall the character is currently touching
+        private Transform m_TouchingWall;
+
+        public bool IsGrounded { get { return m_Grounded; } set { m_Grounded = value; } }
         
         private void Awake()
         {
@@ -47,9 +52,6 @@ namespace UnityStandardAssets._2D
 
         private void FixedUpdate()
         {
-            HandleWallJump();
-
-
             m_Grounded = false;
 
             // The player is grounded if a circlecast to the groundcheck position hits anything designated as ground
@@ -75,17 +77,17 @@ namespace UnityStandardAssets._2D
             Collider2D[] collidersWallLeft = Physics2D.OverlapCircleAll(wallCheckPosLeft.position, k_WallCheckRadius, m_WhatIsWall);
             Collider2D[] collidersWallRight = Physics2D.OverlapCircleAll(wallCheckPosRight.position, k_WallCheckRadius, m_WhatIsWall);
 
-
             m_WallJumpDir = Vector2.zero;
+            m_TouchingWall = null;
             if (collidersWallLeft.Count() > 0)
             {
                 m_WallJumpDir = m_WallJumpDirToRight;
-                Debug.Log("jump At left wall");
+                m_TouchingWall = collidersWallLeft.First().transform;
             }
             else if (collidersWallRight.Count() > 0)
             {
                 m_WallJumpDir = m_WallJumpDirToLeft;
-                Debug.Log("jump At right wall");
+                m_TouchingWall = collidersWallRight.First().transform;
             }
 
             m_WallJump = m_WallJumpDir != Vector2.zero;
@@ -93,15 +95,7 @@ namespace UnityStandardAssets._2D
 
         public void Move(float move, bool crouch, bool jump)
         {
-            // If crouching, check to see if the character can stand up
-            if (!crouch && m_Anim.GetBool("Crouch"))
-            {
-                // If the character has a ceiling preventing them from standing up, keep them crouching
-                if (Physics2D.OverlapCircle(m_CeilingCheck.position, k_CeilingRadius, m_WhatIsGround))
-                {
-                    crouch = true;
-                }
-            }
+            HandleWallJump();
 
             // Set whether or not the character is crouching in the animator
             m_Anim.SetBool("Crouch", crouch);
@@ -115,8 +109,31 @@ namespace UnityStandardAssets._2D
                 // The Speed animator parameter is set to the absolute value of the horizontal input.
                 m_Anim.SetFloat("Speed", Mathf.Abs(move));
 
+                var newVelocity = new Vector2(move * m_MaxSpeed, m_Rigidbody2D.velocity.y);
+
+                #region Bugfix: character levitates as long as he runs towards wall while in mid-air
+                if (m_WallJump && move != 0.0f)
+                {
+                    bool movingTowardsWall = false;
+                    if (m_Rigidbody2D.position.x >= m_TouchingWall.position.x && move < 0.0f)
+                    {
+                        movingTowardsWall = true;
+                    }
+                    else if (m_Rigidbody2D.position.x <= m_TouchingWall.position.x && move > 0.0f)
+                    {
+                        movingTowardsWall = true;
+                    }
+
+                    if (movingTowardsWall)
+                    {
+                        Debug.Log("MOVING TOWARDS WALL!");
+                        newVelocity.x = 0.0f;
+                    }
+                }
+                #endregion
+                
                 // Move the character
-                m_Rigidbody2D.velocity = new Vector2(move*m_MaxSpeed, m_Rigidbody2D.velocity.y);
+                m_Rigidbody2D.velocity = newVelocity;
 
                 // If the input is moving the player right and the player is facing left...
                 if (move > 0 && !m_FacingRight)
@@ -131,22 +148,26 @@ namespace UnityStandardAssets._2D
                     Flip();
                 }
             }
-            // If the player should jump...
-            if (m_Grounded && jump && m_Anim.GetBool("Ground"))
-            {
-                // Add a vertical force to the player.
-                m_Grounded = false;
-                m_Anim.SetBool("Ground", false);
-                m_Rigidbody2D.AddForce(new Vector2(0f, m_JumpForce));
-            }
-            else if (jump && m_WallJump)
-            {
-                var dir = m_WallJumpDir * m_WallJumpForce;
-                m_Rigidbody2D.velocity = Vector2.zero;
-                m_Rigidbody2D.AddForce(dir);
 
-                Flip();
-                Debug.Log("WALL JUMP: " + dir);
+            if (jump)
+            {
+                // If the player should jump...
+                if (m_Grounded && m_Anim.GetBool("Ground"))
+                {
+                    // Add a vertical force to the player.
+                    m_Grounded = false;
+                    m_Anim.SetBool("Ground", false);
+                    m_Rigidbody2D.AddForce(new Vector2(0f, m_JumpForce));
+                }
+                else if (m_WallJump)
+                {
+                    var dir = m_WallJumpDir * m_WallJumpForce;
+                    m_Rigidbody2D.velocity = Vector2.zero;
+                    m_Rigidbody2D.AddForce(dir);
+
+                    Flip();
+                    Debug.Log("WALL JUMP: " + dir);
+                }
             }
         }
 
