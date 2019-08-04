@@ -1,6 +1,7 @@
 using System;
 using UnityEngine;
 using System.Linq;
+using UnityStandardAssets._2D;
 
 namespace UnityStandardAssets._2D
 {
@@ -34,6 +35,8 @@ namespace UnityStandardAssets._2D
         // The wall the character is currently touching
         private Transform m_TouchingWall;
 
+        public bool IsGrounded { get { return m_Grounded; } set { m_Grounded = value; } }
+        
         private void Awake()
         {
             // Setting up references.
