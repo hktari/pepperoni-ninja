@@ -70,18 +70,19 @@ public class CustomMovementController : MonoBehaviour
 
         if (jump)
         {
-            if (m_IsOnGround)
+            if (m_IsOnGround && m_RhytmManager.TryPerformAction())
             {
                 newVelocity += Vector2.up * JumpForce;
-                jump = false;
             }
-            else if (m_IsOnWall)
+            else if (m_IsOnWall && m_RhytmManager.TryPerformAction())
             {
                 Flip();
                 newVelocity = wallJumpDir * WallJumpForce;
                 Debug.Log("WALL JUMP");
-                jump = false;
             }
+            
+            // Handled
+            jump = false;
         }
 
         if (m_IsOnGround)
@@ -127,7 +128,7 @@ public class CustomMovementController : MonoBehaviour
     void Update()
     {
         var t_jump = Input.GetButtonDown("Jump");
-        if (t_jump && m_RhytmManager.TryPerformAction())
+        if (t_jump)
         {
             jump = true;
         }
