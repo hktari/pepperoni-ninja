@@ -1,6 +1,7 @@
 ﻿using UnityEngine.SceneManagement;
 using UnityEngine;
 using UnityEngine.Playables;
+using System.Collections;
 
 
 public class LevelEnd: MonoBehaviour {
@@ -11,6 +12,13 @@ public class LevelEnd: MonoBehaviour {
     private void OnTriggerEnter2D(Collider2D collision)
     {
         track.Play();
-        SceneManager.LoadScene(loadScene);
+        StartCoroutine(WaitForSceneLoad());
+    }
+
+    private IEnumerator WaitForSceneLoad()
+    {
+        yield return new WaitForSeconds(3);
+     SceneManager.LoadScene(loadScene);
+
     }
 }
