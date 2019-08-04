@@ -42,6 +42,7 @@ Transform:
   - {fileID: 3010076632740638277}
   - {fileID: 4057985821736109833}
   - {fileID: 5065409534046813101}
+  - {fileID: 860999612821949999}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -87,13 +88,14 @@ MonoBehaviour:
   WallJumpForce: 25
   IsGroundMask:
     serializedVersion: 2
-    m_Bits: 567
+    m_Bits: 4294967295
   IsWallMask:
     serializedVersion: 2
     m_Bits: 256
   JumpTimeInSec: 1.5
   m_jumpCD: 0
   GravityMultiplier: 1
+  k_GroundCheckRadius: 0.2
   k_WallCheckRadius: 2
   m_WallJumpDirToLeft: {x: -1, y: 1}
   m_WallJumpDirToRight: {x: 1, y: 1}
@@ -939,6 +941,36 @@ Transform:
   m_Father: {fileID: 4957158488866085976}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &4430338923090656899
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 860999612821949999}
+  m_Layer: 0
+  m_Name: GroundCheck
+  m_TagString: Untagged
+  m_Icon: {fileID: -2065832391, guid: 0000000000000000d000000000000000, type: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &860999612821949999
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4430338923090656899}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: -0.64, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 400002}
+  m_RootOrder: 12
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &5033776839312943904
 GameObject:
   m_ObjectHideFlags: 0
@@ -1700,6 +1732,11 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 400002}
     m_Modifications:
+    - target: {fileID: 4839948775745690569, guid: 6df10005323487741928b373a16b655c,
+        type: 3}
+      propertyPath: m_Name
+      value: monkey_asset
+      objectReference: {fileID: 0}
     - target: {fileID: 4839948775746111465, guid: 6df10005323487741928b373a16b655c,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -1755,22 +1792,17 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 4839948775745690569, guid: 6df10005323487741928b373a16b655c,
-        type: 3}
-      propertyPath: m_Name
-      value: monkey_asset
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 6df10005323487741928b373a16b655c, type: 3}
---- !u!4 &294941013 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 4839948775746111465, guid: 6df10005323487741928b373a16b655c,
-    type: 3}
-  m_PrefabInstance: {fileID: 4839948775470102204}
-  m_PrefabAsset: {fileID: 0}
 --- !u!95 &991330796 stripped
 Animator:
   m_CorrespondingSourceObject: {fileID: 4839948775385331536, guid: 6df10005323487741928b373a16b655c,
+    type: 3}
+  m_PrefabInstance: {fileID: 4839948775470102204}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &294941013 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 4839948775746111465, guid: 6df10005323487741928b373a16b655c,
     type: 3}
   m_PrefabInstance: {fileID: 4839948775470102204}
   m_PrefabAsset: {fileID: 0}

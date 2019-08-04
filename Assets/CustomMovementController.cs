@@ -21,6 +21,7 @@ public class CustomMovementController : MonoBehaviour
     public float m_jumpCD;
     public float GravityMultiplier = 3.0f;
 
+    public float k_GroundCheckRadius = 0.2f;
     public float k_WallCheckRadius = 2f;
     public Vector2 m_WallJumpDirToLeft = Vector2.left + Vector2.up;
     public Vector2 m_WallJumpDirToRight = Vector2.right + Vector2.up;
@@ -30,7 +31,7 @@ public class CustomMovementController : MonoBehaviour
     private bool falling;
     private bool m_IsOnGround;
     private bool m_IsOnWall;
-
+    private Transform m_GroundCheck;
     private Transform m_WallCheckLeft;
     private Transform m_WallCheckRight;
     public Animator m_Anim;            // Reference to the player's animator component.
@@ -41,8 +42,7 @@ public class CustomMovementController : MonoBehaviour
     void Start()
     {
         // Setting up references.
-        //m_GroundCheck = transform.Find("GroundCheck");
-        //m_CeilingCheck = transform.Find("CeilingCheck");
+        m_GroundCheck = transform.Find("GroundCheck");
         m_WallCheckLeft = transform.Find("WallCheckLeft");
         m_WallCheckRight = transform.Find("WallCheckRight");
         if (m_Anim == null) m_Anim = GetComponent<Animator>();
@@ -51,7 +51,10 @@ public class CustomMovementController : MonoBehaviour
 
     private void FixedUpdate()
     {
-        m_IsOnGround = GetComponent<CapsuleCollider2D>().IsTouchingLayers(IsGroundMask);
+        m_IsOnGround = Physics2D.OverlapCircleAll(m_GroundCheck.position, k_GroundCheckRadius, IsGroundMask)
+            .Where(c => c.gameObject != gameObject)
+            .Count() > 0;
+        //GetComponent<CapsuleCollider2D>().IsTouchingLayers(IsGroundMask);
         m_IsOnWall = !m_IsOnGround && GetComponent<CapsuleCollider2D>().IsTouchingLayers(IsWallMask);
 
         Vector2 gravity = Vector2.down * Gravity;
@@ -157,5 +160,15 @@ public class CustomMovementController : MonoBehaviour
         Vector3 theScale = transform.localScale;
         theScale.x *= -1;
         transform.localScale = theScale;
+    }
+
+    private void OnDrawGizmos()
+    {
+        if (m_GroundCheck == null)
+        {
+            return;
+        }
+
+        Gizmos.DrawWireSphere(m_GroundCheck.position, k_GroundCheckRadius);
     }
 }
