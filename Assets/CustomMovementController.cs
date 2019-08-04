@@ -37,6 +37,7 @@ public class CustomMovementController : MonoBehaviour
     public Animator m_Anim;            // Reference to the player's animator component.
     private bool m_FacingRight = true;
     private Transform m_collidingWallTransform;
+    private RhytmManager m_RhytmManager;
 
     // Start is called before the first frame update
     void Start()
@@ -45,6 +46,7 @@ public class CustomMovementController : MonoBehaviour
         m_GroundCheck = transform.Find("GroundCheck");
         m_WallCheckLeft = transform.Find("WallCheckLeft");
         m_WallCheckRight = transform.Find("WallCheckRight");
+        m_RhytmManager = GameObject.Find("RhytmManager").GetComponent<RhytmManager>();
         if (m_Anim == null) m_Anim = GetComponent<Animator>();
         m_Rigidbody2D = GetComponent<Rigidbody2D>();
     }
@@ -54,12 +56,10 @@ public class CustomMovementController : MonoBehaviour
         m_IsOnGround = Physics2D.OverlapCircleAll(m_GroundCheck.position, k_GroundCheckRadius, IsGroundMask)
             .Where(c => c.gameObject != gameObject)
             .Count() > 0;
-        //GetComponent<CapsuleCollider2D>().IsTouchingLayers(IsGroundMask);
         m_IsOnWall = !m_IsOnGround && GetComponent<CapsuleCollider2D>().IsTouchingLayers(IsWallMask);
 
         Vector2 gravity = Vector2.down * Gravity;
         Vector2 newVelocity = Velocity + gravity;
-
 
         float horiz = Input.GetAxis("Horizontal");
 
@@ -121,7 +121,11 @@ public class CustomMovementController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        jump = Input.GetButtonDown("Jump");
+        var t_jump = Input.GetButtonDown("Jump");
+        if (t_jump && m_RhytmManager.TryPerformAction())
+        {
+            jump = true;
+        }
     }
 
 
