@@ -32,9 +32,18 @@ public class RhytmManager : MonoBehaviour
         m_origRhytmTime = RhytmTimeMax;
     }
 
+    float timeOfLastAction;
+    public float ComboBreaksInSec = 1.0f;
+
     // Update is called once per frame
     void Update()
     {
+        if (Time.time - timeOfLastAction > ComboBreaksInSec)
+        {
+            RhytmTimeMax = m_origRhytmTime;
+            Canvas.ResetPanelSize();
+        }
+
         if (leftToRight)
         {
             CurRhytmTime += Time.deltaTime;
@@ -61,6 +70,7 @@ public class RhytmManager : MonoBehaviour
         if (success)
         {
             RhytmTimeMax *= SpeedUpgradeFactor;
+            timeOfLastAction = Time.time;
         }
         else
         {

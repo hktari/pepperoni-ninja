@@ -72,6 +72,12 @@ public class RhytmCanvas : MonoBehaviour
         return success;
     }
 
+    public void ResetPanelSize()
+    {
+        var panelRect = panel.GetComponent<RectTransform>();
+        panelRect.transform.parent.transform.localScale = Vector2.one;
+    }
+
     public void UpdateCanvas(float perc)
     {
         Rect backgroundRect = background.GetComponent<RectTransform>().rect;
