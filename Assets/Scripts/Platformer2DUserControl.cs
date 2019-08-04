@@ -1,6 +1,7 @@
 using System;
 using UnityEngine;
 using UnityStandardAssets.CrossPlatformInput;
+using UnityEngine.SceneManagement;
 
 namespace UnityStandardAssets._2D
 {
@@ -34,6 +35,12 @@ namespace UnityStandardAssets._2D
                 Instantiate(Shuriken, this.transform.position, this.transform.rotation);
 
                 }
+                if (Input.GetKeyDown(KeyCode.R))
+                {
+                    Debug.Log("restart");
+                    SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+                }
+
             }
         }
 
