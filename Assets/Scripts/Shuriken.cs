@@ -8,17 +8,31 @@ public class Shuriken : MonoBehaviour
     public GameObject Splash;
     private GameObject Player;
     private float direction;
+    private Rigidbody2D rigid;
     // Start is called before the first frame update
     void Start()
     {
+        rigid = this.GetComponent<Rigidbody2D>();
         Player = GameObject.FindGameObjectWithTag("Player");
         direction = Mathf.Sign(Player.transform.localScale.x);
         Destroy(gameObject, 2);
     }
 
     // Update is called once per frame
-    void Update()
+    void FixedUpdate()
     {
-        transform.Translate(new Vector2(direction*bulletSpeed, 0));
+        
+        rigid.MovePosition((Vector2)transform.position+new Vector2(direction*bulletSpeed, 0));
+    }
+
+
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        if (collision.gameObject.CompareTag("Enemy"))
+        {
+            Debug.Log("Enemy killed");
+            Destroy(collision.gameObject);
+        }
+
     }
 }
