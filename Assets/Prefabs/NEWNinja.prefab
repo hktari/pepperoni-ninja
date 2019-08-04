@@ -79,6 +79,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f4279206d3c879a41a8bd910e775c7b5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  Shuriken: {fileID: 7052604794215273762, guid: 25b9106c9f6ec458aafbb93f9e6eab3e,
+    type: 3}
   MaxSpeed: 12.5
   MaxSpeedAirborne: 1
   MaxFallSpeed: 50

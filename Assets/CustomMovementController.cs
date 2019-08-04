@@ -2,9 +2,12 @@
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using UnityStandardAssets.CrossPlatformInput;
 
 public class CustomMovementController : MonoBehaviour
 {
+    public GameObject Shuriken;
+
     public float MaxSpeed = 10.0f;
     public float MaxSpeedAirborne = 1.0f;
     public float MaxFallSpeed = 30.0f;
@@ -125,6 +128,11 @@ public class CustomMovementController : MonoBehaviour
         if (t_jump && m_RhytmManager.TryPerformAction())
         {
             jump = true;
+        }
+
+        if (CrossPlatformInputManager.GetButtonDown("Fire1"))
+        {
+            Instantiate(Shuriken, new Vector3(transform.position.x, transform.position.y, 100), this.transform.rotation);
         }
     }
 
