@@ -5,6 +5,7 @@ using UnityStandardAssets._2D;
 public class RespawnOnDeath : MonoBehaviour {
 
     public PlatformerCharacter2D character;
+    public CustomMovementController movement;
 
     public int storeHistory = 40;
     Queue<Vector2> validPositions = new Queue<Vector2>();
@@ -12,16 +13,34 @@ public class RespawnOnDeath : MonoBehaviour {
     private void Awake()
     {
         if (character == null) character = GetComponent<PlatformerCharacter2D>();
+        if (movement == null) movement = GetComponent<CustomMovementController>();
     }
 
     private void Update()
     {
-        if (character.IsGrounded)
+        if (character)
         {
-            validPositions.Enqueue(character.transform.position);
-            if (validPositions.Count > storeHistory)
+            if (character.IsGrounded)
             {
-                validPositions.Dequeue();
+                validPositions.Enqueue(character.transform.position);
+                if (validPositions.Count > storeHistory)
+                {
+                    validPositions.Dequeue();
+                }
+            }
+        }
+        else
+        {
+            if (movement)
+            {
+                if (movement.IsOnGround)
+                {
+                    validPositions.Enqueue(movement.transform.position);
+                    if (validPositions.Count > storeHistory)
+                    {
+                        validPositions.Dequeue();
+                    }
+                }
             }
         }
     }

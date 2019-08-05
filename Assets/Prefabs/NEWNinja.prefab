@@ -12,6 +12,8 @@ GameObject:
   - component: {fileID: 3192465074764963392}
   - component: {fileID: 2669398546446705560}
   - component: {fileID: -3303951491847921194}
+  - component: {fileID: 6501644504671421284}
+  - component: {fileID: 1087818312}
   m_Layer: 0
   m_Name: NEWNinja
   m_TagString: Player
@@ -59,7 +61,7 @@ Rigidbody2D:
   m_Simulated: 1
   m_UseFullKinematicContacts: 0
   m_UseAutoMass: 1
-  m_Mass: 1.7373759
+  m_Mass: 1.3333002
   m_LinearDrag: 0
   m_AngularDrag: 0
   m_GravityScale: 1
@@ -91,7 +93,7 @@ MonoBehaviour:
   WallJumpForce: 20
   IsGroundMask:
     serializedVersion: 2
-    m_Bits: 4294967295
+    m_Bits: 2615
   IsWallMask:
     serializedVersion: 2
     m_Bits: 256
@@ -117,8 +119,38 @@ CapsuleCollider2D:
   m_UsedByEffector: 0
   m_UsedByComposite: 0
   m_Offset: {x: 0, y: -0.07}
-  m_Size: {x: 0.68, y: 1.03}
+  m_Size: {x: 0.5, y: 1.03}
   m_Direction: 0
+--- !u!114 &6501644504671421284
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 100002}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 58b12d99237996944a5598b908c64a2d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  character: {fileID: 0}
+  movement: {fileID: 2669398546446705560}
+  storeHistory: 30
+--- !u!114 &1087818312
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 100002}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 58b12d99237996944a5598b908c64a2d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  character: {fileID: 0}
+  movement: {fileID: 2669398546446705560}
+  storeHistory: 30
 --- !u!1 &1316234761
 GameObject:
   m_ObjectHideFlags: 0

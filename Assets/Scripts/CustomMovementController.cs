@@ -43,6 +43,8 @@ public class CustomMovementController : MonoBehaviour
     private RhytmManager m_RhytmManager;
     private SoundManager m_SoundManager;
 
+    public bool IsOnGround { get { return m_IsOnGround; } }
+
     // Start is called before the first frame update
     void Start()
     {
